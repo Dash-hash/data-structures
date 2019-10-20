@@ -12,6 +12,32 @@ class Dictionary<TKey, TValue>
         _capacity = capacity;
     }
 
+    public IEnumerable<TKey> Keys()
+    {
+        return Entries().Select(x => x.Key);
+    }
+    public IEnumerable<TValue> Values()
+    {
+        return Entries().Select(x => x.Value);
+    }
+
+    public TValue this[TKey key] {
+        get {
+            var hash = Hash(key);
+            var entry = _entries[hash];
+
+            while (entry != null)
+            {
+                if (entry.Key.Equals(key))
+                    return entry.Value;
+
+                entry = entry.Next;
+            }
+
+            throw new KeyNotFoundException();
+        }
+    }
+
     public void Add(TKey key, TValue value)
     {
         var hash = Hash(key);
@@ -48,25 +74,6 @@ class Dictionary<TKey, TValue>
         }
     }
 
-    public TValue this[TKey key] 
-    {
-        get 
-        {
-            var hash = Hash(key);
-            var entry = _entries[hash];
-
-            while (entry != null)
-            {
-                if (entry.Key.Equals(key))
-                    return entry.Value;
-
-                entry = entry.Next;
-            }
-
-            throw new KeyNotFoundException();
-        }
-    }
-
     private int Hash(TKey key)
     {
         var hash = key.GetHashCode() % _capacity;
@@ -90,14 +97,5 @@ class Dictionary<TKey, TValue>
                 entry = entry.Next;
             }
         }
-    }
-
-    public IEnumerable<TKey> Keys()
-    {
-        return Entries().Select(x => x.Key);
-    }
-    public IEnumerable<TValue> Values()
-    {
-        return Entries().Select(x => x.Value);
     }
 }
