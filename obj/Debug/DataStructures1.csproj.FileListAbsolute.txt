@@ -1,0 +1,7 @@
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\bin\Debug\DataStructures1.exe.config
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\bin\Debug\DataStructures1.exe
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\bin\Debug\DataStructures1.pdb
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\obj\Debug\DataStructures1.csprojAssemblyReference.cache
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\obj\Debug\DataStructures1.csproj.CoreCompileInputs.cache
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\obj\Debug\DataStructures1.exe
+C:\Users\Кекс\source\repos\DataStructures1\DataStructures1\obj\Debug\DataStructures1.pdb

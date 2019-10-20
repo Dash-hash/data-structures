@@ -1,20 +1,20 @@
-using System;
+﻿using System;
 
-namespace Tree
+namespace DataStructures
 {
     class Tree<T> where T : IComparable
     {
-        private T _value;
         private Tree<T> _parent = null;
         private Tree<T> _left = null;
         private Tree<T> _right = null;
+        private T _value;
 
         public Tree()
         {
         }
 
         public void Add(T value)
-        { 
+        {
             if (value.CompareTo(_value) > 0)
             {
                 if (_right == null)
@@ -24,11 +24,12 @@ namespace Tree
                         _parent = this,
                         _value = value
                     };
+
                     return;
                 }
 
                 _right.Add(value);
-            }     
+            }
             else if (value.CompareTo(_value) < 0)
             {
                 if (_left == null)
@@ -38,12 +39,13 @@ namespace Tree
                         _parent = this,
                         _value = value
                     };
+
                     return;
                 }
 
                 _left.Add(value);
             }
-            else 
+            else
                 _value = value;
         }
 
@@ -117,11 +119,11 @@ namespace Tree
                 return this;
 
             if (value.CompareTo(_value) > 0)
-                if(_right != null)
+                if (_right != null)
                     return _right.Find(value);
 
             if (value.CompareTo(_value) < 0)
-                if(_left != null)
+                if (_left != null)
                     return _left.Find(value);
 
             return null;
@@ -140,7 +142,7 @@ namespace Tree
 
             if (_left != null)
                 _left.PreOrder(function);
-                
+
             if (_right != null)
                 _right.PreOrder(function);
         }
@@ -158,7 +160,7 @@ namespace Tree
         {
             if (_left != null)
                 _left.PostOrder(function);
-                
+
             if (_right != null)
                 _right.PostOrder(function);
 
