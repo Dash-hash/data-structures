@@ -55,8 +55,7 @@ namespace DataStructures
 
             while (index != Size)
             {
-                yield return _items[index];
-                index++;
+                yield return _items[index++];
             }
         }
 
