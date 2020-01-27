@@ -5,6 +5,7 @@ namespace DataStructures
 {
     class Dictionary<TKey, TValue>
     {
+        #region Inner Types
         private class Entry
         {
             public Entry Next;
@@ -15,9 +16,9 @@ namespace DataStructures
             {
                 Key = key;
                 Value = value;
-                Next = null;
             }
         }
+        #endregion
 
         private Entry[] _entries;
         private int _capacity;
