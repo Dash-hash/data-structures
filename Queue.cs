@@ -30,7 +30,7 @@ namespace DataStructures
             else
             {
                 _last.Next = node;
-                _last = node;
+                _last = _last.Next;
             }
 
             Count++;
