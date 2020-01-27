@@ -6,17 +6,16 @@ namespace DataStructures
 {
     class HashSet<T>
     {
+        #region Inner Types
         private class Entry
         {
             public Entry Next;
             public T Value { get; set; }
 
-            public Entry(T value)
-            {
+            public Entry(T value) =>
                 Value = value;
-                Next = null;
-            }
         }
+        #endregion
 
         private Entry[] _entries;
         private int _capacity;
@@ -25,7 +24,6 @@ namespace DataStructures
         {
             _entries = new Entry[capacity];
             _capacity = capacity;
-            Count = 0;
         }
 
         public int Count { get; private set; }
