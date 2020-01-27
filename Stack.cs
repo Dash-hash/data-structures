@@ -10,21 +10,14 @@ namespace DataStructures
             public Node Next { get; set; }
             public Node Previous { get; set; }
 
-            public Node(T value)
-            {
+            public Node(T value) =>
                 Value = value;
-            }
         }
 
-        private Node _first = null;
+        private Node _first;
         private Node _last;
 
         public int Count { get; private set; }
-
-        public Stack()
-        {
-            Count = 0;
-        }
 
         public void Push(T value)
         {
@@ -53,6 +46,9 @@ namespace DataStructures
             var last = _last.Value;
 
             _last.Previous = _last;
+
+            Count--;
+
             return last;
         }
 
