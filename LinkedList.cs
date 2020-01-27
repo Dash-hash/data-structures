@@ -2,32 +2,32 @@
 
 namespace DataStructures
 {
-    class LinkedList<T>
+    public class LinkedList<T>
     {
-        private class Node
+        #region Inner Types
+        public class Node
         {
             public T Value { get; }
             public Node Next { get; set; }
 
-            public Node(T value)
-            {
+            public Node(T value) =>
                 Value = value;
-            }
         }
+        #endregion
 
-        private Node _first = null;
         private Node _last;
 
-        public LinkedList()
-        {
-            Length = 0;
-        }
-
+        public Node First { get; private set; }
         public int Length { get; private set; }
 
-        public T this[int index] {
-            get {
-                var temp = _first;
+        public T Last() => 
+            _last.Value;
+
+        public T this[int index] 
+        {
+            get 
+            {
+                var temp = First;
 
                 for (int i = 0; i < index; i++)
                     temp = temp.Next;
@@ -40,10 +40,10 @@ namespace DataStructures
         {
             var node = new Node(value);
 
-            if (_first == null)
+            if (First == null)
             {
-                _first = node;
-                _last = _first;
+                First = node;
+                _last = First;
             }
             else
             {
@@ -53,25 +53,31 @@ namespace DataStructures
 
             Length++;
         }
-
+        
         public void Remove(T value)
         {
             Node previous = null;
-            var temp = _first;
+            var temp = First;
 
             for (int i = 0; i < Length; i++)
             {
                 if (i == 1)
-                    previous = _first;
+                    previous = First;
 
                 if (temp.Value.Equals(value))
                 {
                     if (previous == null)
-                        _first = temp.Next;
+                        First = temp.Next;
                     else
+                    {
                         previous.Next = temp.Next;
 
+                        if (temp.Equals(_last))
+                            _last = previous;
+                    }
+
                     Length--;
+                    return;
                 }
 
                 temp = temp.Next;
@@ -80,10 +86,11 @@ namespace DataStructures
                     previous = previous.Next;
             }
         }
+
         public void RemoveAt(int index)
         {
             Node previous = null;
-            var temp = _first;
+            var temp = First;
 
             if (0 > index || index >= Length)
                 throw new IndexOutOfRangeException();
@@ -91,7 +98,7 @@ namespace DataStructures
             for (int i = 0; i < index; i++)
             {
                 if (i == 1)
-                    previous = _first;
+                    previous = First;
 
                 temp = temp.Next;
 
@@ -101,7 +108,7 @@ namespace DataStructures
 
             if (previous == null)
             {
-                _first = temp.Next;
+                First = temp.Next;
                 Length--;
             }
             else
