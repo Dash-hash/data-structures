@@ -1,170 +1,232 @@
 ﻿using System;
+using System.Collections;
 
 namespace DataStructures
 {
-    class Tree<T> where T : IComparable
+    public class Tree<T> : IEnumerable where T : IComparable
     {
-        private Tree<T> _parent = null;
-        private Tree<T> _left = null;
-        private Tree<T> _right = null;
-        private T _value;
-
-        public Tree()
+        #region Inner Types
+        public class Node
         {
+            public T Value { get; internal set; }
+
+            public Node Parent;
+            public Node Left;
+            public Node Right;
+
+            public Node(T value) =>
+                Value = value;
+
+            public void SetParent(Node parent) =>
+                Parent = parent;
+
+            public void SetChild(Node child)
+            {
+                if (child.Value.CompareTo(Value) >= 0)
+                    Right = child;
+                else
+                    Left = child;
+            }
         }
+        #endregion
+
+        private Node _root;
+
+        public Node Root() =>
+            _root;
 
         public void Add(T value)
         {
-            if (value.CompareTo(_value) > 0)
-            {
-                if (_right == null)
-                {
-                    _right = new Tree<T>
-                    {
-                        _parent = this,
-                        _value = value
-                    };
-
-                    return;
-                }
-
-                _right.Add(value);
-            }
-            else if (value.CompareTo(_value) < 0)
-            {
-                if (_left == null)
-                {
-                    _left = new Tree<T>
-                    {
-                        _parent = this,
-                        _value = value
-                    };
-
-                    return;
-                }
-
-                _left.Add(value);
-            }
+            if (_root == null)
+                _root = new Node(value);
             else
-                _value = value;
+                Add(ref _root, _root, value);
         }
 
-        public void Remove(T value)
+        public void Remove(T value) =>
+            Remove(ref _root, value);
+
+        public void PreOrder(Action<T> action) =>
+            PreOrder(_root, action);
+
+        public void InOrder(Action<T> action) =>
+            InOrder(_root, action);
+
+        public void PostOrder(Action<T> action) =>
+            PostOrder(_root, action);
+
+        public int Height() =>
+            Height(_root);
+
+        private void Add(ref Node node, Node parent, T value)
         {
-            Tree<T> temp;
-
-            if (value.CompareTo(_value) < 0 && _left != null)
-            {
-                _left.Remove(value);
-                return;
-            }
-
-            if (value.CompareTo(_value) > 0 && _right != null)
-            {
-                _right.Remove(value);
-                return;
-            }
-
-            if (value.CompareTo(_value) == 0)
-            {
-                if (_left == null && _right == null)
+            if (node == null)
+                node = new Node(value)
                 {
-                    if (value.CompareTo(_parent._value) > 0)
-                        _parent._right = null;
-                    if (value.CompareTo(_parent._value) < 0)
-                        _parent._left = null;
+                    Parent = parent
+                };
+            else
+            {
+                if (value.CompareTo(node.Value) < 0)
+                    Add(ref node.Left, node, value);
+                else
+                    Add(ref node.Right, node, value);
+            }
+        }
 
-                    return;
+        private void Remove(ref Node node, T value)
+        {
+            if (node == null)
+                return;
+
+            if (value.CompareTo(node.Value) < 0)
+                Remove(ref node.Left, value);
+
+            else if (value.CompareTo(node.Value) > 0)
+                Remove(ref node.Right, value);
+
+            else if (value.CompareTo(node.Value) == 0)
+            {
+                Node temp;
+
+                if (node.Left != null && node.Right == null)
+                {
+                    node.Left.SetParent(node.Parent);
+                    node.Parent.SetChild(node.Left);
                 }
-                if (_left != null && _right != null)
+                else if (node.Left == null && node.Right != null)
                 {
-                    if (_right._left != null)
+                    node.Right.SetParent(node.Parent);
+                    node.Parent.SetChild(node.Right);
+                }
+                else if (node.Left == null && node.Right == null)
+                {
+                    if (node.Value.CompareTo(node.Parent.Value) < 0)
+                        node.Parent.Left = null;
+                    else
+                        node.Parent.Right = null;
+                }
+                else if (node.Left != null && node.Right != null)
+                {
+                    if (node.Right.Left != null)
                     {
-                        temp = _right.Leftmost();
-                        _value = temp._value;
-                        _right.Remove(_value);
-                        return;
+                        temp = Leftmost(node.Right);
+                        node.Value = temp.Value;
+                        Remove(ref node.Right, temp.Value);
                     }
                     else
                     {
-                        _value = _right._value;
-                        _right.Remove(_value);
-                        return;
+                        node.Right.Left = node.Left;
+                        node.Left.Parent = node.Right;
+
+                        if (node == _root)
+                            _root = node.Right;
+                        else
+                        {
+                            node.Right.SetParent(node.Parent);
+                            node.Parent.SetChild(node.Right);
+                        }
                     }
-                }
-                if (_left != null && _right == null)
-                {
-                    if (value.CompareTo(_parent._value) > 0)
-                        _parent._right = _left;
-                    if (value.CompareTo(_parent._value) < 0)
-                        _parent._left = _left;
-
-                    return;
-                }
-                if (_left == null && _right != null)
-                {
-                    if (value.CompareTo(_parent._value) > 0)
-                        _parent._right = _right;
-                    if (value.CompareTo(_parent._value) < 0)
-                        _parent._left = _right;
-
-                    return;
                 }
             }
         }
 
-        public Tree<T> Find(T value)
+        public Node Find(Node node, T value)
         {
-            if (value.CompareTo(_value) == 0)
-                return this;
+            if (value.CompareTo(node.Value) == 0)
+                return node;
 
-            if (value.CompareTo(_value) > 0)
-                if (_right != null)
-                    return _right.Find(value);
+            if (value.CompareTo(node.Value) > 0)
+                if (node.Right != null)
+                    return Find(node.Right, value);
 
-            if (value.CompareTo(_value) < 0)
-                if (_left != null)
-                    return _left.Find(value);
+            if (value.CompareTo(node.Value) < 0)
+                if (node.Left != null)
+                    return Find(node.Left, value);
 
             return null;
         }
-        public Tree<T> Leftmost()
-        {
-            if (_left != null)
-                return _left.Leftmost();
 
-            return this;
+        public Node Leftmost(Node node)
+        {
+            if (node.Left != null)
+                return Leftmost(node.Left);
+
+            return node;
         }
 
-        public void PreOrder(Action<T> function)
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+
+        public IEnumerator GetEnumerator()
         {
-            function(_value);
+            var nodes = new System.Collections.Generic.Stack<Node>();
+            var current = _root;
 
-            if (_left != null)
-                _left.PreOrder(function);
+            while (nodes.Count != 0 || current != null)
+            {
+                while (current != null)
+                {
+                    nodes.Push(current);
+                    current = current.Left;
+                }
 
-            if (_right != null)
-                _right.PreOrder(function);
+                current = nodes.Pop();
+
+                yield return current.Value;
+
+                current = current.Right;
+            }
         }
-        public void InOrder(Action<T> function)
+
+        private void PreOrder(Node node, Action<T> action)
         {
-            if (_left != null)
-                _left.InOrder(function);
+            action(node.Value);
 
-            function(_value);
+            if (node.Left != null)
+                PreOrder(node.Left, action);
 
-            if (_right != null)
-                _right.InOrder(function);
+            if (node.Right != null)
+                PreOrder(node.Right, action);
         }
-        public void PostOrder(Action<T> function)
+        private void InOrder(Node node, Action<T> action)
         {
-            if (_left != null)
-                _left.PostOrder(function);
+            if (node.Left != null)
+                InOrder(node.Left, action);
 
-            if (_right != null)
-                _right.PostOrder(function);
+            action(node.Value);
 
-            function(_value);
+            if (node.Right != null)
+                InOrder(node.Right, action);
+        }
+        private void PostOrder(Node node, Action<T> action)
+        {
+            if (node.Left != null)
+                PostOrder(node.Left, action);
+
+            if (node.Right != null)
+                PostOrder(node.Right, action);
+
+            action(node.Value);
+        }
+
+        private static int Height(Node node)
+        {
+            if (node == null)
+                return 0;
+
+            int leftHeight = 0;
+            int rightHeight = 0;
+
+            if (node.Left != null)
+                leftHeight = Height(node.Left);
+            if (node.Right != null)
+                rightHeight = Height(node.Right);
+
+            if (leftHeight > rightHeight)
+                return leftHeight + 1;
+            else
+                return rightHeight + 1;
         }
     }
 }
