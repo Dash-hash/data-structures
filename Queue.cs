@@ -9,7 +9,7 @@ namespace DataStructures
             public Node Next { get; set; }
             public T Value { get; }
 
-            public Node(T value)=>
+            public Node(T value) =>
                 Value = value;
         }
 
