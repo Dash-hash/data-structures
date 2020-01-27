@@ -44,9 +44,7 @@ namespace DataStructures
                 throw new InvalidOperationException();
 
             var last = _last.Value;
-
             _last.Previous = _last;
-
             Count--;
 
             return last;
