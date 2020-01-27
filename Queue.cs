@@ -9,22 +9,14 @@ namespace DataStructures
             public Node Next { get; set; }
             public T Value { get; }
 
-            public Node(T value)
-            {
+            public Node(T value)=>
                 Value = value;
-                Next = null;
-            }
         }
 
-        private Node _first = null;
+        private Node _first;
         private Node _last;
 
         public int Count { get; private set; }
-
-        public Queue()
-        {
-            Count = 0;
-        }
 
         public void Enqueue(T value)
         {
@@ -51,6 +43,8 @@ namespace DataStructures
 
             var first = _first.Value;
             _first = _first.Next;
+            Count--;
+
             return first;
         }
 
