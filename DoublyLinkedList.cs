@@ -4,25 +4,20 @@ namespace DataStructures
 {
     class DoublyLinkedList<T>
     {
+        #region Inner Types
         private class Node
         {
             public T Value { get; }
             public Node Next { get; set; }
             public Node Previous { get; set; }
 
-            public Node(T value)
-            {
+            public Node(T value) =>
                 Value = value;
-            }
         }
+        #endregion
 
-        private Node _first = null;
+        private Node _first;
         private Node _last;
-
-        public DoublyLinkedList()
-        {
-            Length = 0;
-        }
 
         public int Length { get; private set; }
 
