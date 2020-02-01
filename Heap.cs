@@ -13,7 +13,6 @@ namespace DataStructures
         {
             _items = new T[capacity];
             _capacity = capacity;
-            Size = 0;
         }
 
         public int Size { get; private set; }
@@ -59,10 +58,8 @@ namespace DataStructures
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
 
         private void HeapifyUp()
         {
@@ -76,6 +73,7 @@ namespace DataStructures
                 index = parentIndex;
             }
         }
+
         private void HeapifyDown()
         {
             var index = 0;
@@ -97,44 +95,32 @@ namespace DataStructures
             }
         }
 
-        private int GetParentIndex(int index)
-        {
-            return (index - 1) / 2;
-        }
-        private int GetLeftChildIndex(int index)
-        {
-            return index * 2 + 1;
-        }
-        private int GetRightChildIndex(int index)
-        {
-            return index * 2 + 2;
-        }
+        private int GetParentIndex(int index) =>
+            (index - 1) / 2;
 
-        private bool HasParent(int index)
-        {
-            return GetParentIndex(index) >= 0;
-        }
-        private bool HasLeftChild(int index)
-        {
-            return GetLeftChildIndex(index) < Size;
-        }
-        private bool HasRightChild(int index)
-        {
-            return GetRightChildIndex(index) < Size;
-        }
+        private int GetLeftChildIndex(int index) =>
+            index * 2 + 1;
 
-        private T Parent(int index)
-        {
-            return _items[GetParentIndex(index)];
-        }
-        private T LeftChild(int index)
-        {
-            return _items[GetLeftChildIndex(index)];
-        }
-        private T RightChild(int index)
-        {
-            return _items[GetRightChildIndex(index)];
-        }
+        private int GetRightChildIndex(int index) =>
+            index * 2 + 2;
+
+        private bool HasParent(int index) =>
+            GetParentIndex(index) >= 0;
+
+        private bool HasLeftChild(int index) =>
+            GetLeftChildIndex(index) < Size;
+
+        private bool HasRightChild(int index) => 
+            GetRightChildIndex(index) < Size;
+
+        private T Parent(int index) =>
+            _items[GetParentIndex(index)]; 
+
+        private T LeftChild(int index) =>
+            _items[GetLeftChildIndex(index)];   
+
+        private T RightChild(int index) =>
+            _items[GetRightChildIndex(index)];
 
         private void Expand(T[] array)
         {
